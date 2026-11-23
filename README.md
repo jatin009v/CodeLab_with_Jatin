@@ -210,15 +210,7 @@ Built with a passion for coding, learning, and making complex concepts easier to
 
 **Developed by [Jatin Gupta](https://www.linkedin.com/in/jatingupta09/)**
 
----
 
-## 🙏 Acknowledgements
-
-CodeLab's concept and visual approach were inspired by the original **Algo Lab** demo created by [@DilumSanjaya](https://x.com/DilumSanjaya/status/2124547118220316851).
-
-According to the existing project documentation, this implementation was developed independently, using the original demo's behaviour, layout, and visual approach as a reference without reusing its source code.
-
----
 
 ### ⭐ Support the Project
 
