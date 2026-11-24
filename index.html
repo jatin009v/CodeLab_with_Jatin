@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="CodeLab by Jatin — Data structures and algorithms, step by step, with isometric diagrams that move as you go." />
+    <title>CodeLab · Data structures and algorithms, step by step</title>
+    <script>
+      (function () {
+        var t = null;
+        var q = new URLSearchParams(location.search).get('theme');
+        try { t = q || localStorage.getItem('algolab:theme'); } catch (e) {}
+        if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-D3yOWDb4.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DtAZXGKK.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
