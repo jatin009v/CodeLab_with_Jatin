@@ -73,7 +73,7 @@ export function Header({ view, onView, onOpen, theme, onTheme }: Props) {
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <a className="brand" href="#/stacks" aria-label="CodeLab home">
+        <a className="brand" href="#/big-o" aria-label="CodeLab home">
           <Logo />
           <span className="brand-name">
             Code<mark>Lab</mark>

@@ -57,16 +57,18 @@ function SoonView({ title }: { title: string }) {
 }
 
 export default function App() {
-  const [route, go] = useRoute('stacks');
+  const [route, go] = useRoute('big-o');
   const [id, stepPart] = route.split('/');
-  const initialStep = Math.max(0, (parseInt(stepPart ?? '1', 10) || 1) - 1);
-  const [theme, toggleTheme] = useTheme();
-  const [done, markDone] = useProgress();
-  const [view, setView] = useState<View>('learn');
-  const ref = findLesson(id) ?? findLesson('stacks')!;
+  const { progress, done, markDone, recordStep, lastVisited } = useProgress();
 
-  const open = (lessonId: string) => {
-    go(lessonId);
+  const ref = findLesson(id) ?? findLesson('big-o')!;
+  const savedStep = progress.lessons[ref.id]?.lastStep ?? 0;
+  const initialStep = stepPart !== undefined ? Math.max(0, (parseInt(stepPart, 10) || 1) - 1) : savedStep;
+  const [theme, toggleTheme] = useTheme();
+  const [view, setView] = useState<View>('learn');
+
+  const open = (lessonPath: string) => {
+    go(lessonPath);
     setView('learn');
   };
 
@@ -74,8 +76,18 @@ export default function App() {
     <div className="app">
       <Header view={view} onView={setView} onOpen={open} theme={theme} onTheme={toggleTheme} />
       <div className={`layout${view === 'learn' ? '' : ' layout--page'}`}>
-        <Sidebar current={ref.id} done={done} onOpen={open} />
-        {view === 'learn' && <LessonPage key={ref.id} lessonRef={ref} lesson={lessons[ref.id]} initialStep={initialStep} onOpen={open} onFinish={markDone} />}
+        <Sidebar current={ref.id} done={done} onOpen={open} lastVisited={lastVisited} />
+        {view === 'learn' && (
+          <LessonPage
+            key={ref.id}
+            lessonRef={ref}
+            lesson={lessons[ref.id]}
+            initialStep={initialStep}
+            onOpen={open}
+            onFinish={(finishedId) => markDone(finishedId, lessons[finishedId]?.steps.length ?? 1)}
+            onStepChange={(stepIdx, totalSteps) => recordStep(ref.id, stepIdx, totalSteps)}
+          />
+        )}
         {view === 'progress' && <ProgressView done={done} onOpen={open} />}
         {view !== 'learn' && view !== 'progress' && <SoonView title={view[0].toUpperCase() + view.slice(1)} />}
       </div>

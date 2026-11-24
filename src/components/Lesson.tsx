@@ -261,18 +261,31 @@ interface Props {
   lesson?: Lesson;
   onOpen: (id: string) => void;
   onFinish: (id: string) => void;
+  onStepChange?: (stepIndex: number, totalSteps: number) => void;
   initialStep?: number;
 }
 
-export function LessonPage({ lessonRef, lesson, onOpen, onFinish, initialStep = 0 }: Props) {
+export function LessonPage({ lessonRef, lesson, onOpen, onFinish, onStepChange, initialStep = 0 }: Props) {
   const steps = lesson?.steps ?? placeholderSteps(lessonRef);
   const [index, setIndex] = useState(() => Math.min(initialStep, steps.length - 1));
+
+  // Sync index if initialStep changes from external navigation
+  useEffect(() => {
+    setIndex(Math.min(initialStep, steps.length - 1));
+  }, [initialStep, steps.length]);
 
   // Keep the step in the address bar (#/lesson/3) without adding history entries.
   useEffect(() => {
     const hash = `#/${lessonRef.id}${index > 0 ? `/${index + 1}` : ''}`;
     if (location.hash !== hash) history.replaceState(null, '', hash);
   }, [lessonRef.id, index]);
+
+  // Record step changes for persistent progress
+  useEffect(() => {
+    if (lesson) {
+      onStepChange?.(index, steps.length);
+    }
+  }, [lesson, index, steps.length, onStepChange]);
 
   const step = steps[Math.min(index, steps.length - 1)];
   const flatIndex = allLessons.findIndex((l) => l.id === lessonRef.id);

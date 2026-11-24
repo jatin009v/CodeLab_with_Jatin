@@ -6,9 +6,10 @@ interface Props {
   current: string;
   done: Set<string>;
   onOpen: (id: string) => void;
+  lastVisited?: { lessonId: string; step: number } | null;
 }
 
-export function Sidebar({ current, done, onOpen }: Props) {
+export function Sidebar({ current, done, onOpen, lastVisited }: Props) {
   const currentChapter = findLesson(current)?.chapterIndex ?? 0;
   const [openSet, setOpenSet] = useState<Set<number>>(() => new Set([currentChapter]));
   const [mobileExpanded, setMobileExpanded] = useState(false);
@@ -28,6 +29,7 @@ export function Sidebar({ current, done, onOpen }: Props) {
 
   const total = allLessons.length;
   const currentLessonObj = findLesson(current);
+  const lastVisitedRef = lastVisited && lastVisited.lessonId !== current ? findLesson(lastVisited.lessonId) : null;
 
   const handleLessonClick = (id: string) => {
     onOpen(id);
@@ -57,6 +59,23 @@ export function Sidebar({ current, done, onOpen }: Props) {
       </div>
 
       <div className="sidebar-content">
+        {lastVisitedRef && (
+          <div className="sidebar-continue-wrap">
+            <button
+              className="sidebar-continue-btn"
+              onClick={() => handleLessonClick(lastVisited!.lessonId + (lastVisited!.step > 0 ? `/${lastVisited!.step + 1}` : ''))}
+              title={`Continue ${lastVisitedRef.title} at Step ${lastVisited!.step + 1}`}
+            >
+              <span className="continue-sparkle" aria-hidden="true">▶</span>
+              <span className="continue-meta">
+                <span className="continue-label">Continue Learning</span>
+                <b className="continue-title">{lastVisitedRef.title}</b>
+              </span>
+              <span className="continue-step">Step {lastVisited!.step + 1} →</span>
+            </button>
+          </div>
+        )}
+
         <div className="tree">
           {course.map((ch, ci) => {
             const isOpen = openSet.has(ci);
